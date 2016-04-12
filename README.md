@@ -1,3 +1,7 @@
+# Description
+
+This module is used to wrap any request to a webpage blocked by incapsula.
+
 # Usage
 
 ```
