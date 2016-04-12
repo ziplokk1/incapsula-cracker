@@ -10,7 +10,7 @@ import requests
 
 session = requests.Session()
 response = session.get('http://example.com')  # url is blocked by incapsula
-response = incapsula.crack(session, response.url, response.content)  # url is no longer blocked by incapsula
+response = incapsula.crack(session, response)  # url is no longer blocked by incapsula
 ```
 
 # Setup
