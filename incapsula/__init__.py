@@ -221,6 +221,6 @@ def set_incap_cookie(sess):
     digests = []
     for cookie in cookies:
         digests.append(_simple_digest(",".join(extensions) + cookie))
-    res = ",".join(extensions) + ",digest=" + ",".join(digests)
+    res = ",".join(extensions) + ",digest=" + ",".join(str(digests))
     cookie = _create_cookie("___utmvc", res, 20)
     sess.cookies.set(**cookie)
