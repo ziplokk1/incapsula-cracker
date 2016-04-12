@@ -89,12 +89,6 @@ def _load_config(conf=None):
     else:
         data.append(urllib.quote('_phantom=false'))
     return data
-    
-    
-logger.debug('loading encapsula extensions and plugins')
-extensions = _load_plugin_extensions(navigator['plugins'])
-extensions.append(_load_plugin(navigator['plugins']))
-extensions.extend(_load_config())
 
 
 def chunks(l, n):
@@ -217,6 +211,10 @@ def _create_cookie(name, value, seconds):
 
 
 def set_incap_cookie(sess):
+    logger.debug('loading encapsula extensions and plugins')
+    extensions = _load_plugin_extensions(navigator['plugins'])
+    extensions.append(_load_plugin(navigator['plugins']))
+    extensions.extend(_load_config())
     cookies = _get_session_cookies(sess)
     digests = []
     for cookie in cookies:
