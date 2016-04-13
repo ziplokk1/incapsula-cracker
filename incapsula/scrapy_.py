@@ -42,7 +42,13 @@ class IncapsulaMiddleware(object):
             cookie = self.get_incap_cookie(request, response)
             scheme, host = urlparse.urlsplit(request.url)[:2]
             url = '{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random())
-            return Request(url, meta={'incap_set': True, 'org_req_url': request.url}.update(request.meta), cookies=[cookie], callback=request.callback)
+            cpy = request.copy()
+            cpy.meta['incap_set'] = True
+            cpy.meta['org_req_url'] = request.url
+            cpy.cookies.update(cookie)
+            cpy._url = url
+            return cpy
+            # return Request(url, meta={'incap_set': True, 'org_req_url': request.url}.update(request.meta), cookies=[cookie], callback=request.callback)
         self.logger.debug('incap set %s' % request.url)
         if request.meta.get('incap_set', False):
             self.logger.debug('incap set, fetching incap resource 1')
