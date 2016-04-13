@@ -14,6 +14,7 @@ class IncapsulaMiddleware(object):
 
     def __init__(self, crawler):
         self.crawler = crawler
+        self.priority_adjust = crawler.settings.getint('RETRY_PRIORITY_ADJUST')
 
     def _get_session_cookies(self, request):
         cookies_ = []
@@ -53,6 +54,7 @@ class IncapsulaMiddleware(object):
             cpy.meta['org_request'] = request
             cpy.cookies.update(cookie)
             cpy._url = url
+            cpy.priority = request.priority + self.priority_adjust
             return cpy
         elif request.meta.get('incap_set', False) and not request.meta.get('incap_request_1', False):
             timing = []
@@ -67,6 +69,7 @@ class IncapsulaMiddleware(object):
             cpy.meta['tstart'] = start
             cpy.meta['timing'] = timing
             cpy.meta['incap_request_1'] = True
+            cpy.priority = request.priority + self.priority_adjust
             return cpy
         elif request.meta.get('incap_request_1', False) and request.meta.get('incap_completed', False):
             timing = request.meta.get('timing', [])
@@ -78,11 +81,13 @@ class IncapsulaMiddleware(object):
             cpy = request.copy()
             cpy.meta['completed_incap'] = True
             cpy._url = str(resource2) + urllib.quote('complete ({})'.format(",".join(timing)))
+            cpy.priority = request.priority + self.priority_adjust
             return cpy
         self.crawler.stats.inc_value('incap_cracked')
         cpy = request.meta.get('org_request').copy()
         cpy.cookies = request.cookies
         cpy.dont_filter = True
+        cpy.priority = request.priority + self.priority_adjust
         return cpy
 
     @classmethod
