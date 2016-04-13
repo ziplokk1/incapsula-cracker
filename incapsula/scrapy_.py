@@ -32,7 +32,7 @@ class IncapsulaMiddleware(object):
         return cookie
 
     def process_response(self, request, response, spider):
-        # print 'processing %s - for %s' % (request.url, request.meta.get('org_req_url'))
+        self.logger.info('processing %s - for %s' % (request.url, request.meta.get('org_req_url')))
         if not request.meta.get('incap_set', False):
             soup = BeautifulSoup(response.body.decode('ascii', errors='ignore'))
             meta = soup.find('meta', {'name': 'robots'})
@@ -40,7 +40,6 @@ class IncapsulaMiddleware(object):
                 return response
 
             # Set generated cookie to request more cookies from incapsula resource
-            self.logger.debug('setting incap cookie')
             cookie = self.get_incap_cookie(request, response)
             scheme, host = urlparse.urlsplit(request.url)[:2]
             url = '{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random())
@@ -52,7 +51,6 @@ class IncapsulaMiddleware(object):
             cpy._url = url
             return cpy
         elif request.meta.get('incap_set', False) and not request.meta.get('incap_request_1', False):
-            self.logger.debug('incap set, fetching incap resource 1')
             timing = []
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
@@ -67,7 +65,6 @@ class IncapsulaMiddleware(object):
             cpy.meta['incap_request_1'] = True
             return cpy
         elif request.meta.get('incap_request_1', False) and request.meta.get('incap_completed', False):
-            self.logger.debug('incap resource 1 fetched, fetching incap resource 2')
             timing = request.meta.get('timing', [])
             resource2 = request.meta.get('resource2')
             start = request.meta.get('tstart')
@@ -82,4 +79,3 @@ class IncapsulaMiddleware(object):
         cpy.cookies = request.cookies
         cpy.dont_filter = True
         return cpy
-        # return Request(request.meta.get('org_req_url'), cookies=request.cookies, meta=request.meta, dont_filter=True)
