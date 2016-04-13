@@ -66,7 +66,7 @@ class IncapsulaMiddleware(object):
             cpy.meta['timing'] = timing
             cpy.meta['incap_request_1'] = True
             return cpy
-        if request.meta.get('incap_request_1', False):
+        if request.meta.get('incap_request_1', False) and request.meta.get('incap_completed', False):
             self.logger.debug('incap resource 1 fetched, fetching incap resource 2')
             timing = request.meta.get('timing', [])
             resource2 = request.meta.get('resource2')
@@ -75,6 +75,7 @@ class IncapsulaMiddleware(object):
             time.sleep(0.02)
             timing.append('r:{}'.format(now_in_seconds() - start))
             cpy = request.copy()
+            cpy.meta['completed_incap'] = True
             cpy._url = str(resource2) + urllib.quote('complete ({})'.format(",".join(timing)))
             return cpy
         return Request(request.meta.get('org_req_url'), cookies=request.cookies, meta=request.meta)
