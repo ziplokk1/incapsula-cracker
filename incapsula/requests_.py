@@ -1,6 +1,7 @@
 import random
 import time
 
+import requests
 from BeautifulSoup import BeautifulSoup
 
 from methods import *
@@ -74,3 +75,20 @@ def set_incap_cookie(sess, response):
     res = ",".join(extensions) + ",digest=" + ",".join(str(digests))
     cookie = create_cookie("___utmvc", res, 20, response.url)
     sess.cookies.set(**cookie)
+
+
+class IncapSession(requests.Session):
+    """
+    requests.Session subclass to wrap all get requests with incapsula.crack.
+    """
+
+    def get(self, url, **kwargs):
+        """Sends a GET request wrapped with incapsula.crack. Returns :class:`Response` object.
+
+        :param url: URL for the new :class:`Request` object.
+        :param \*\*kwargs: Optional arguments that ``request`` takes.
+        """
+
+        kwargs.setdefault('allow_redirects', True)
+        r = self.request('GET', url, **kwargs)
+        return crack(self, r)

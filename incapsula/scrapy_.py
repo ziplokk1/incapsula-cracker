@@ -32,12 +32,12 @@ class IncapsulaMiddleware(object):
         return cookie
 
     def process_response(self, request, response, spider):
-        self.logger.info('processing %s - for %s' % (request.url, request.meta.get('org_req_url')))
         if not request.meta.get('incap_set', False):
             soup = BeautifulSoup(response.body.decode('ascii', errors='ignore'))
             meta = soup.find('meta', {'name': 'robots'})
             if not meta:
                 return response
+            self.logger.info('cracking incapsula blocked resource <{}>'.format(request.url))
 
             # Set generated cookie to request more cookies from incapsula resource
             cookie = self.get_incap_cookie(request, response)
