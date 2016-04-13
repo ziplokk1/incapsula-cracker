@@ -12,6 +12,9 @@ class IncapsulaMiddleware(object):
     cookie_count = 0
     logger = logging.getLogger('incapsula')
 
+    def __init__(self, crawler):
+        self.crawler = crawler
+
     def _get_session_cookies(self, request):
         cookies_ = []
         for cookie_key, cookie_value in request.cookies.items():
@@ -37,6 +40,7 @@ class IncapsulaMiddleware(object):
             meta = soup.find('meta', {'name': 'robots'})
             if not meta:
                 return response
+            self.crawler.stats.inc_value('incap_blocked')
             self.logger.info('cracking incapsula blocked resource <{}>'.format(request.url))
 
             # Set generated cookie to request more cookies from incapsula resource
@@ -75,7 +79,12 @@ class IncapsulaMiddleware(object):
             cpy.meta['completed_incap'] = True
             cpy._url = str(resource2) + urllib.quote('complete ({})'.format(",".join(timing)))
             return cpy
+        self.crawler.stats.inc_value('incap_cracked')
         cpy = request.meta.get('org_request').copy()
         cpy.cookies = request.cookies
         cpy.dont_filter = True
         return cpy
+
+    @classmethod
+    def from_crawler(cls, crawler):
+        return cls(crawler)
