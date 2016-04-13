@@ -34,7 +34,7 @@ class IncapsulaMiddleware(object):
     def process_response(self, request, response, spider):
         print 'processing %s - for %s' % (request.url, request.meta.get('org_req_url'))
         if not request.meta.get('incap_set', False):
-            soup = BeautifulSoup(response.body_as_unicode())
+            soup = BeautifulSoup(response.body)
             meta = soup.find('meta', {'name': 'robots'})
             if not meta:
                 return response
