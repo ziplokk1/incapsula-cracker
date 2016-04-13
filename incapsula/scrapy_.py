@@ -56,7 +56,7 @@ class IncapsulaMiddleware(object):
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
             print response.body_as_unicode()
-            code = get_obfuscated_code(response.meta.get('org_body'))
+            code = get_obfuscated_code(request.meta.get('org_body'))
             parsed = parse_obfuscated_code(code)
             resource1, resource2 = get_resources(parsed, response.url)[1:]
             cpy = request.copy()
