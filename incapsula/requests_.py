@@ -1,6 +1,5 @@
 import random
 import time
-import urlparse
 
 from BeautifulSoup import BeautifulSoup
 
