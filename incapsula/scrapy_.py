@@ -45,6 +45,7 @@ class IncapsulaMiddleware(object):
             cpy = request.copy()
             cpy.meta['incap_set'] = True
             cpy.meta['org_req_url'] = request.url
+            cpy.meta['org_body'] = response.body_as_unicode()
             cpy.cookies.update(cookie)
             cpy._url = url
             return cpy
@@ -55,10 +56,11 @@ class IncapsulaMiddleware(object):
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
             print response.body_as_unicode()
-            code = get_obfuscated_code(response.body)
+            code = get_obfuscated_code(response.meta.get('org_body'))
             parsed = parse_obfuscated_code(code)
             resource1, resource2 = get_resources(parsed, response.url)[1:]
             cpy = request.copy()
+            cpy._url = resource1
             cpy.meta['resource2'] = resource2
             cpy.meta['tstart'] = start
             cpy.meta['timing'] = timing
@@ -72,5 +74,7 @@ class IncapsulaMiddleware(object):
             timing.append('c:{}'.format(now_in_seconds() - start))
             time.sleep(0.02)
             timing.append('r:{}'.format(now_in_seconds() - start))
-            return Request(resource2 + urllib.quote('complete ({})'.format(",".join(timing))), cookies=request.cookies)
+            cpy = request.copy()
+            cpy._url = resource2 + urllib.quote('complete ({})'.format(",".join(timing)))
+            return cpy
         return Request(request.meta.get('org_req_url'), cookies=request.cookies, meta=request.meta)
