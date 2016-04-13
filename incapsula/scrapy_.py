@@ -41,7 +41,7 @@ class IncapsulaMiddleware(object):
             self.logger.debug('setting incap cookie')
             cookie = self.get_incap_cookie(request, response)
             scheme, host = urlparse.urlsplit(request.url)[:2]
-            url = '{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random)
+            url = '{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random())
             return Request(url, meta={'incap_set': True, 'org_req_url': request.url}.update(request.meta), cookies=[cookie])
         self.logger.debug('incap set %s' % request.url)
         if request.meta.get('incap_set', False):
