@@ -54,6 +54,7 @@ class IncapsulaMiddleware(object):
             timing = []
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
+            print response.body_as_unicode()
             code = get_obfuscated_code(response.body)
             parsed = parse_obfuscated_code(code)
             resource1, resource2 = get_resources(parsed, response.url)[1:]
