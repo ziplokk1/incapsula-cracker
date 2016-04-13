@@ -4,13 +4,31 @@ This module is used to wrap any request to a webpage blocked by incapsula.
 
 # Usage
 
+## With Requests
+
 ```
-import incapsula
+from incapsula import crack
 import requests
 
 session = requests.Session()
 response = session.get('http://example.com')  # url is blocked by incapsula
-response = incapsula.crack(session, response)  # url is no longer blocked by incapsula
+response = crack(session, response)  # url is no longer blocked by incapsula
+```
+
+```
+from incapsula import IncapSession
+session = IncapSession()
+response = session.get('http://example.com')  # url is not blocked by incapsula
+```
+
+## With Scrapy
+
+### settings.py
+
+```
+DOWNLOADER_MIDDLEWARES = {
+    'incapsula.IncapsulaMiddleware': 900
+}
 ```
 
 # Setup
@@ -24,7 +42,6 @@ If there are issues, try the following
 
 # Notes
 
-* config.py, navigator.json, and serialize.html have all only been tested using firefox.
-* currently incapsula only works with the requests library. 
+* config.py, navigator.json, and serialize.html have all only been tested using firefox. 
 
 I understand that there's minimal commenting and that's because I'm not sure exactly why incapsula is sending requests to certain pages other than to obtain cookies. This is just a literal reverse engineer of incapsulas javascript code.

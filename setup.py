@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-version = '1.0'
+version = '0.1'
 
 REQUIREMENTS = [
     'beautifulsoup',
@@ -16,5 +16,5 @@ setup(
     author='Mark Sanders',
     author_email='sdscdeveloper@gmail.com',
     install_requires=REQUIREMENTS,
-    description='A way to bypass incapsula robot checks using the python requests library.'
+    description='A way to bypass incapsula robot checks when using requests or scrapy.'
 )
