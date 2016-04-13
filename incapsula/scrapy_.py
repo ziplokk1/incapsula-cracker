@@ -33,7 +33,7 @@ class IncapsulaMiddleware(object):
 
     def process_response(self, request, response, spider):
         if not request.meta.get('incap_set', False):
-            soup = BeautifulSoup(response.body)
+            soup = BeautifulSoup(response.body_as_unicode())
             meta = soup.find('meta', {'name': 'robots'})
             if not meta:
                 return response
@@ -48,7 +48,7 @@ class IncapsulaMiddleware(object):
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
 
-            code = get_obfuscated_code(response.body)
+            code = get_obfuscated_code(response.body_as_unicode())
             parsed = parse_obfuscated_code(code)
             resource1, resource2 = get_resources(parsed, response.url)[1:]
             return Request(resource1, cookies=request.cookies, meta={
