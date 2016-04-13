@@ -33,6 +33,8 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Setup
 
+`pip install incapsula-cracker`
+
 There should be no problems using incapsula-cracker right out of the box.
 
 If there are issues, try the following
@@ -43,5 +45,6 @@ If there are issues, try the following
 # Notes
 
 * config.py, navigator.json, and serialize.html have all only been tested using firefox. 
-
-I understand that there's minimal commenting and that's because I'm not sure exactly why incapsula is sending requests to certain pages other than to obtain cookies. This is just a literal reverse engineer of incapsulas javascript code.
+* As of now, this is only proven to work with bjs.com.
+* I understand that there's minimal commenting and that's because I'm not sure exactly why incapsula is sending requests to certain pages other than to obtain cookies. This is just a literal reverse engineer of incapsulas javascript code.
+* If you would like to contribute or if there are any other sites that you would like me to add, contact me at sdscdeveloper@gmail.com.
