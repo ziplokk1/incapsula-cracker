@@ -48,7 +48,7 @@ def crack(sess, response):
         return response
     set_incap_cookie(sess, response)
     # populate first round cookies
-    scheme, host = urlparse.urlsplit(response.url)
+    scheme, host = urlparse.urlsplit(response.url)[:2]
     sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random))
     # populate second round cookies
     _load_encapsula_resource(sess, response)
