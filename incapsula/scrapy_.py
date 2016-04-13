@@ -10,6 +10,7 @@ from methods import *
 class IncapsulaMiddleware(object):
 
     cookie_count = 0
+    logger = logging.getLogger('incapsula')
 
     def _get_session_cookies(self, request):
         cookies_ = []
@@ -36,11 +37,13 @@ class IncapsulaMiddleware(object):
         if not meta:
             return response
         if not request.meta.get('incap_set', False):
+            self.logger.debug('setting incap cookie')
             cookie = self.get_incap_cookie(request, response)
             scheme, host = urlparse.urlsplit(request.url)[:2]
             url = '{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random)
             return Request(url, meta={'incap_set': True}.update(request.meta), cookies=[cookie])
         if request.meta.get('incap_set', False):
+            self.logger.debug('incap set, fetching incap resource 1')
             timing = []
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
@@ -55,6 +58,7 @@ class IncapsulaMiddleware(object):
                 'incap_request_1': True
             }.update(request.meta))
         if request.meta.get('incap_request_1', False):
+            self.logger.debug('incap resource 1 fetched, fetching incap resource 2')
             timing = request.meta.get('timing', [])
             resource2 = request.meta.get('resource2')
             start = request.meta.get('tstart')
