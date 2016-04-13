@@ -46,6 +46,7 @@ class IncapsulaMiddleware(object):
             cpy.meta['incap_set'] = True
             cpy.meta['org_req_url'] = request.url
             cpy.meta['org_body'] = response.body_as_unicode()
+            cpy.meta['org_request'] = request
             cpy.cookies.update(cookie)
             cpy._url = url
             return cpy
@@ -78,4 +79,8 @@ class IncapsulaMiddleware(object):
             cpy.meta['completed_incap'] = True
             cpy._url = str(resource2) + urllib.quote('complete ({})'.format(",".join(timing)))
             return cpy
-        return Request(request.meta.get('org_req_url'), cookies=request.cookies, meta=request.meta)
+        cpy = request.meta.get('org_request').copy()
+        cpy._url = request.meta.get('org_req_url')
+        cpy.dont_filter = True
+        return cpy
+        # return Request(request.meta.get('org_req_url'), cookies=request.cookies, meta=request.meta, dont_filter=True)
