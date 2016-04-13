@@ -41,3 +41,7 @@ config = {
         'exists': False
     }
 }
+
+host = ''
+
+scheme = 'http'
