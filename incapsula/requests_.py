@@ -16,7 +16,7 @@ def _load_encapsula_resource(sess, response):
 
     code = get_obfuscated_code(response.content)
     parsed = parse_obfuscated_code(code)
-    resource1, resource2 = get_resources(parsed, response.url)
+    resource1, resource2 = get_resources(parsed, response.url)[1:]
     sess.get(resource1)
 
     timing.append('c:{}'.format(now_in_seconds() - start))
