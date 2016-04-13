@@ -48,23 +48,21 @@ class IncapsulaMiddleware(object):
             cpy.cookies.update(cookie)
             cpy._url = url
             return cpy
-            # return Request(url, meta={'incap_set': True, 'org_req_url': request.url}.update(request.meta), cookies=[cookie], callback=request.callback)
         self.logger.debug('incap set %s' % request.url)
         if request.meta.get('incap_set', False):
             self.logger.debug('incap set, fetching incap resource 1')
             timing = []
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
-
-            code = get_obfuscated_code(response.body_as_unicode())
+            code = get_obfuscated_code(response.body)
             parsed = parse_obfuscated_code(code)
             resource1, resource2 = get_resources(parsed, response.url)[1:]
-            return Request(resource1, cookies=request.cookies, meta={
-                'resource2': resource2,
-                'tstart': start,
-                'timing': timing,
-                'incap_request_1': True
-            }.update(request.meta))
+            cpy = request.copy()
+            cpy.meta['resource2'] = resource2
+            cpy.meta['tstart'] = start
+            cpy.meta['timing'] = timing
+            cpy.meta['incap_request_1'] = True
+            return cpy
         if request.meta.get('incap_request_1', False):
             self.logger.debug('incap resource 1 fetched, fetching incap resource 2')
             timing = request.meta.get('timing', [])
