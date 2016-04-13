@@ -50,7 +50,7 @@ class IncapsulaMiddleware(object):
             cpy._url = url
             return cpy
         self.logger.debug('incap set %s' % request.url)
-        if request.meta.get('incap_set', False):
+        if request.meta.get('incap_set', False) and not request.meta.get('incap_request_1', False):
             self.logger.debug('incap set, fetching incap resource 1')
             timing = []
             start = now_in_seconds()
