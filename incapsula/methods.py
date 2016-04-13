@@ -121,6 +121,7 @@ def now_in_seconds():
 def get_resources(code, url):
     scheme, host = urlparse.urlsplit(url)[:2]
     resources = re.findall('(/_Incapsula_Resource.*?)\"', code)
+    print resources
     return [scheme + '://' + host + r for r in resources]
 
 
