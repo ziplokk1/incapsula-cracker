@@ -60,7 +60,7 @@ class IncapsulaMiddleware(object):
             parsed = parse_obfuscated_code(code)
             resource1, resource2 = get_resources(parsed, response.url)[1:]
             cpy = request.copy()
-            cpy._url = resource1
+            cpy._url = str(resource1)
             cpy.meta['resource2'] = resource2
             cpy.meta['tstart'] = start
             cpy.meta['timing'] = timing
@@ -75,6 +75,6 @@ class IncapsulaMiddleware(object):
             time.sleep(0.02)
             timing.append('r:{}'.format(now_in_seconds() - start))
             cpy = request.copy()
-            cpy._url = resource2 + urllib.quote('complete ({})'.format(",".join(timing)))
+            cpy._url = str(resource2) + urllib.quote('complete ({})'.format(",".join(timing)))
             return cpy
         return Request(request.meta.get('org_req_url'), cookies=request.cookies, meta=request.meta)
