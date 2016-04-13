@@ -38,25 +38,25 @@ class IncapsulaMiddleware(object):
             meta = soup.find('meta', {'name': 'robots'})
             if not meta:
                 return response
+
+            # Set generated cookie to request more cookies from incapsula resource
             self.logger.debug('setting incap cookie')
             cookie = self.get_incap_cookie(request, response)
             scheme, host = urlparse.urlsplit(request.url)[:2]
             url = '{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random())
             cpy = request.copy()
             cpy.meta['incap_set'] = True
-            cpy.meta['org_req_url'] = request.url
-            cpy.meta['org_body'] = response.body.decode('ascii', errors='ignore'),
+            cpy.meta['org_response'] = response
             cpy.meta['org_request'] = request
             cpy.cookies.update(cookie)
             cpy._url = url
             return cpy
-        self.logger.debug('incap set %s' % request.url)
-        if request.meta.get('incap_set', False) and not request.meta.get('incap_request_1', False):
+        elif request.meta.get('incap_set', False) and not request.meta.get('incap_request_1', False):
             self.logger.debug('incap set, fetching incap resource 1')
             timing = []
             start = now_in_seconds()
             timing.append('s:{}'.format(now_in_seconds() - start))
-            code = get_obfuscated_code(request.meta.get('org_body'))
+            code = get_obfuscated_code(request.meta.get('org_response').body.decode('ascii', errors='ignore'))
             parsed = parse_obfuscated_code(code)
             resource1, resource2 = get_resources(parsed, response.url)[1:]
             cpy = request.copy()
@@ -66,7 +66,7 @@ class IncapsulaMiddleware(object):
             cpy.meta['timing'] = timing
             cpy.meta['incap_request_1'] = True
             return cpy
-        if request.meta.get('incap_request_1', False) and request.meta.get('incap_completed', False):
+        elif request.meta.get('incap_request_1', False) and request.meta.get('incap_completed', False):
             self.logger.debug('incap resource 1 fetched, fetching incap resource 2')
             timing = request.meta.get('timing', [])
             resource2 = request.meta.get('resource2')
@@ -79,7 +79,7 @@ class IncapsulaMiddleware(object):
             cpy._url = str(resource2) + urllib.quote('complete ({})'.format(",".join(timing)))
             return cpy
         cpy = request.meta.get('org_request').copy()
-        cpy._url = request.meta.get('org_req_url')
+        cpy.cookies = request.cookies
         cpy.dont_filter = True
         return cpy
         # return Request(request.meta.get('org_req_url'), cookies=request.cookies, meta=request.meta, dont_filter=True)
