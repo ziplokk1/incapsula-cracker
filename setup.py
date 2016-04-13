@@ -16,5 +16,6 @@ setup(
     author='Mark Sanders',
     author_email='sdscdeveloper@gmail.com',
     install_requires=REQUIREMENTS,
-    description='A way to bypass incapsula robot checks when using requests or scrapy.'
+    description='A way to bypass incapsula robot checks when using requests or scrapy.',
+    include_package_data=True
 )
