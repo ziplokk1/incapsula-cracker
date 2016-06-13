@@ -51,11 +51,12 @@ def crack(sess, response):
     # populate first round cookies
     scheme, host = urlparse.urlsplit(response.url)[:2]
     logger.debug('scheme={} host={}'.format(scheme, host))
-    params = endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
-    url_params = urllib.urlencode(params)
-    logger.debug('url_params={}'.format(url_params))
-    sess.get('{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params))
-    # sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random()))
+    if host in endpoints:
+        params = endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
+        url_params = urllib.urlencode(params)
+        logger.debug('url_params={}'.format(url_params))
+        sess.get('{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params))
+    sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random()))
     # sess.get('{scheme}://{host}/_Incapsula_Resource?SWJIYLWA=2977d8d74f63d7f8fedbea018b7a1d05&ns=1'.format(scheme=scheme, host=host))
     # populate second round cookies
     _load_encapsula_resource(sess, response)
