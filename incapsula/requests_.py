@@ -43,13 +43,19 @@ def crack(sess, response):
     :rtype: requests.Response
     """
     soup = BeautifulSoup(response.content)
-    meta = soup.find('meta', {'name': 'robots'})
+    meta = soup.find('meta', {'name': re.compile('robots', re.IGNORECASE)})
     if not meta:  # if the page is not blocked, then just return the original request.
         return response
     set_incap_cookie(sess, response)
     # populate first round cookies
     scheme, host = urlparse.urlsplit(response.url)[:2]
-    sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random))
+    logger.debug('scheme={} host={}'.format(scheme, host))
+    params = config.endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
+    url_params = urllib.urlencode(params)
+    logger.debug('url_params={}'.format(url_params))
+    sess.get('{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params))
+    # sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random()))
+    # sess.get('{scheme}://{host}/_Incapsula_Resource?SWJIYLWA=2977d8d74f63d7f8fedbea018b7a1d05&ns=1'.format(scheme=scheme, host=host))
     # populate second round cookies
     _load_encapsula_resource(sess, response)
     return sess.get(response.url)

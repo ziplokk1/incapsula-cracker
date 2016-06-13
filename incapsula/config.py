@@ -45,3 +45,10 @@ config = {
 host = ''
 
 scheme = 'http'
+
+endpoints = {
+    'www.whoscored.com': {
+        'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
+        'ns': '1'
+    }
+}
