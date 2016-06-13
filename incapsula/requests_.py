@@ -51,6 +51,9 @@ def crack(sess, response):
     # populate first round cookies
     scheme, host = urlparse.urlsplit(response.url)[:2]
     logger.debug('scheme={} host={}'.format(scheme, host))
+    # Check if the host is in pre-configured incapsula endpoints
+    # If it is, use the pre-configured endpoint to get the obfuscated code,
+    # otherwise use the default resource
     if host in endpoints:
         params = endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
         url_params = urllib.urlencode(params)
@@ -60,8 +63,6 @@ def crack(sess, response):
     else:
         sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random()), headers={'Referer': response.url})
         _load_encapsula_resource(sess, response)
-    # sess.get('{scheme}://{host}/_Incapsula_Resource?SWJIYLWA=2977d8d74f63d7f8fedbea018b7a1d05&ns=1'.format(scheme=scheme, host=host))
-    # populate second round cookies
 
     return sess.get(response.url)
 
