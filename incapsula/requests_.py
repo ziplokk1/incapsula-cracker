@@ -5,6 +5,7 @@ import requests
 from BeautifulSoup import BeautifulSoup
 
 from methods import *
+from config import endpoints
 
 logger = logging.getLogger('incapsula')
 
@@ -50,7 +51,7 @@ def crack(sess, response):
     # populate first round cookies
     scheme, host = urlparse.urlsplit(response.url)[:2]
     logger.debug('scheme={} host={}'.format(scheme, host))
-    params = config.endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
+    params = endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
     url_params = urllib.urlencode(params)
     logger.debug('url_params={}'.format(url_params))
     sess.get('{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params))

@@ -46,6 +46,9 @@ host = ''
 
 scheme = 'http'
 
+# Edit these endpoints based on the url params following the host's incapsula resource url
+# Ex. www.whoscored.com's incapsula resource is /_IncapsulaResource?SWJIYLWA=2977d8d74f63d7f8fedbea018b7a1d05&ns=1
+# so each of the params is it's own key/value pair
 endpoints = {
     'www.whoscored.com': {
         'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
