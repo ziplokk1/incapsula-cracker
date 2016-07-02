@@ -48,9 +48,16 @@ scheme = 'http'
 
 # Edit these endpoints based on the url params following the host's incapsula resource url
 # Ex. www.whoscored.com's incapsula resource is /_IncapsulaResource?SWJIYLWA=2977d8d74f63d7f8fedbea018b7a1d05&ns=1
-# so each of the params is it's own key/value pair
+# so each of the params is it's own key/value pair.
+# If you want to add one manually, in the net panel of firebug, you will be looking for a request sent to _IncapsulaResource
+# with a response body that contains a bunch of numbers and javascript code. Please look at incapsula/example_incap_response.txt
+# for an example.
 endpoints = {
     'www.whoscored.com': {
+        'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
+        'ns': '1'
+    },
+    'www.bjs.com': {
         'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05',
         'ns': '1'
     }

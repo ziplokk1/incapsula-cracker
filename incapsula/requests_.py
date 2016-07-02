@@ -26,6 +26,12 @@ def _load_encapsula_resource(sess, response):
     sess.get(resource2 + urllib.quote('complete ({})'.format(",".join(timing))))
 
 
+def incap_blocked(response):
+    soup = BeautifulSoup(response.content)
+    meta = soup.find('meta', {'name': re.compile('robots', re.IGNORECASE)})
+    return bool(meta)
+
+
 def crack(sess, response):
     """
     Pass a response object to this method to retry the url after the incapsula cookies have been set.
@@ -43,9 +49,7 @@ def crack(sess, response):
     :type response: requests.Response
     :rtype: requests.Response
     """
-    soup = BeautifulSoup(response.content)
-    meta = soup.find('meta', {'name': re.compile('robots', re.IGNORECASE)})
-    if not meta:  # if the page is not blocked, then just return the original request.
+    if not incap_blocked(response):  # if the page is not blocked, then just return the original request.
         return response
     set_incap_cookie(sess, response)
     # populate first round cookies
@@ -55,7 +59,7 @@ def crack(sess, response):
     # If it is, use the pre-configured endpoint to get the obfuscated code,
     # otherwise use the default resource
     if host in endpoints:
-        params = endpoints.get(host, {'SWKMTFSR': '1', 'e': random.random()})
+        params = endpoints.get(host, {'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05', 'ns': '1'})
         url_params = urllib.urlencode(params)
         logger.debug('url_params={}'.format(url_params))
         r = sess.get('{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params), headers={'Referer': response.url})
@@ -93,6 +97,9 @@ class IncapSession(requests.Session):
     """
     requests.Session subclass to wrap all get requests with incapsula.crack.
     """
+
+    def __init__(self):
+        requests.Session.__init__(self)
 
     def get(self, url, **kwargs):
         """Sends a GET request wrapped with incapsula.crack. Returns :class:`Response` object.
