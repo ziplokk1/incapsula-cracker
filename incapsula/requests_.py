@@ -58,16 +58,16 @@ def crack(sess, response):
     # Check if the host is in pre-configured incapsula endpoints
     # If it is, use the pre-configured endpoint to get the obfuscated code,
     # otherwise use the default resource
-    if host in endpoints:
-        params = endpoints.get(host, {'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05', 'ns': '1'})
-        url_params = urllib.urlencode(params)
-        logger.debug('url_params={}'.format(url_params))
-        r = sess.get('{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params), headers={'Referer': response.url})
-        _load_encapsula_resource(sess, r)
-    else:
-        sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random()), headers={'Referer': response.url})
-        _load_encapsula_resource(sess, response)
-
+    params = endpoints.get(host, {'SWJIYLWA': '2977d8d74f63d7f8fedbea018b7a1d05', 'ns': '1'})
+    url_params = urllib.urlencode(params)
+    logger.debug('url_params={}'.format(url_params))
+    # Get the obfuscated code
+    r = sess.get('{scheme}://{host}/_IncapsulaResource?{url_params}'.format(scheme=scheme, host=host, url_params=url_params), headers={'Referer': response.url})
+    # Parse the obfuscated code and get any resources from the page which would be done through an XHR
+    _load_encapsula_resource(sess, r)
+    # One last request which returns no data, and I'm honestly not sure why this request is even sent... I'm just
+    # trying to mimic exactly what the browser is doing. It's probably some analytics thing.
+    sess.get('{scheme}://{host}/_Incapsula_Resource?SWKMTFSR=1&e={rdm}'.format(scheme=scheme, host=host, rdm=random.random()), headers={'Referer': response.url})
     return sess.get(response.url)
 
 

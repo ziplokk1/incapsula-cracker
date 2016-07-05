@@ -11,7 +11,7 @@ from incapsula.requests_ import incap_blocked
 import requests
 
 
-target_url = 'https://www.bjs.com'
+target_url = 'https://www.karger.com/Article/Abstract/437330'
 
 
 session = requests.Session()
@@ -24,7 +24,8 @@ def test_blocked():
     :return:
     """
     r = session.get(target_url)
-    # print r.content
+    with open('blocked.html', 'wb') as f:
+        f.write(r.content)
     return incap_blocked(r)
 
 
@@ -35,7 +36,8 @@ def unblock():
     """
     r = session.get(target_url)
     r = crack(session, r)
-    # print r.content
+    with open('unblocked.html', 'wb') as f:
+        f.write(r.content)
     return incap_blocked(r)
 
 
@@ -56,6 +58,7 @@ if __name__ == '__main__':
     unblock()
     is_blocked = test_blocked()
     print 'incap blocked after unblock:', is_blocked
+    print session.cookies
 
-    incap_session_blocked = test_incap_session()
-    print 'incap session blocked:', incap_session_blocked
+    # incap_session_blocked = test_incap_session()
+    # print 'incap session blocked:', incap_session_blocked

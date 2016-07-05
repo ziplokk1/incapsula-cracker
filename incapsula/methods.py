@@ -141,4 +141,6 @@ def parse_obfuscated_code(code):
     for chunk in chunks(code, 2):
         data.append(int("".join(chunk), 16))
     code = [unichr(x) for x in data]
-    return ''.join(code)
+    deobfuscated_code = ''.join(code)
+    logger.debug('deobfuscated_code={}'.format(deobfuscated_code))
+    return deobfuscated_code
