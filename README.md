@@ -1,4 +1,7 @@
 # Please Note
+
+## For Python3, Please see [here](https://github.com/ziplokk1/incapsula-cracker-py3)
+
 ## I have not been able to keep this script updated. If there are issues, try to check out the `hotfix` branch and see if that works. 
 
 # Description
