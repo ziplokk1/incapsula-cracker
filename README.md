@@ -1,8 +1,9 @@
+# For Python3, Please see [here](https://github.com/ziplokk1/incapsula-cracker-py3)
+
 # Please Note
-
-## For Python3, Please see [here](https://github.com/ziplokk1/incapsula-cracker-py3)
-
-## I have not been able to keep this script updated. If there are issues, try to check out the `hotfix` branch and see if that works. 
+* This library is for python2.7+.
+* As of 2017-05-22 I am officially no longer maintaining this version. See above for the python3 implementation.
+* I have not been able to keep this script updated. If there are issues, try to check out the `hotfix` branch and see if that works. 
 
 # Description
 
