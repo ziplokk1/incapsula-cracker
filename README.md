@@ -1,4 +1,4 @@
-# For Python3, Please see [here](https://github.com/ziplokk1/incapsula-cracker-py3)
+# This version is no longer maintained, Please see [here](https://github.com/ziplokk1/incapsula-cracker-py3) for the newest version.
 
 # Please Note
 * This library is for python2.7+.
